@@ -25,6 +25,7 @@
 
 	$app->addRoutes(array(
 		'/'							=> 'Profile:index',
+		'/auth/:strategy'			=> 'Auth:index',
 	));
 
 	$app->run();
