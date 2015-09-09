@@ -1,0 +1,10 @@
+{
+    "require": {
+        "slimcontroller/slimcontroller": "0.4.3"
+    },
+    "autoload": {
+        "psr-0": {
+            "Resumax": "src/"
+        }
+    }
+}
