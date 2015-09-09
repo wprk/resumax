@@ -39,6 +39,14 @@ class Router implements ControllerProviderInterface
             ->get('profile/home', array($profile, 'indexAction'))
             ->bind('profile');
 
+        $auth = new AuthController(
+            $app['twig']
+        );
+
+        $controllers
+            ->get('auth', array($auth, 'authAction'))
+            ->bind('login');
+
         return $controllers;
     }
 }

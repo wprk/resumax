@@ -4,8 +4,57 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "dbc48e4f47cfb0f2c93585d85802a598",
+    "hash": "7cfc260382398181f957b920370bd722",
     "packages": [
+        {
+            "name": "icehero/silex-opauth",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/icehero/silex-opauth.git",
+                "reference": "8ad9937c261e03f3312594612039b55927fdf578"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/icehero/silex-opauth/zipball/8ad9937c261e03f3312594612039b55927fdf578",
+                "reference": "8ad9937c261e03f3312594612039b55927fdf578",
+                "shasum": ""
+            },
+            "require": {
+                "opauth/opauth": "*"
+            },
+            "require-dev": {
+                "opauth/facebook": "*",
+                "silex/silex": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "SilexOpauth": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Florin Popa",
+                    "email": "pp.flrn@gmail.com",
+                    "homepage": "http://florinpopa.net"
+                },
+                {
+                    "name": "Rafal Lindemann",
+                    "email": "rl@stamina.pl",
+                    "homepage": "http://stamina.pl"
+                }
+            ],
+            "description": "Opauth silex framework service provider.",
+            "homepage": "https://github.com/icehero/silex-opauth",
+            "keywords": [
+                "OPAuth",
+                "oauth",
+                "silex"
+            ],
+            "time": "2015-03-17 12:20:12"
+        },
         {
             "name": "opauth/opauth",
             "version": "0.4.4",
@@ -58,6 +107,50 @@
                 "twitter"
             ],
             "time": "2013-05-10 09:01:52"
+        },
+        {
+            "name": "opauth/twitter",
+            "version": "0.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/opauth/twitter.git",
+                "reference": "24792d512ccc67e7d11e9249737616f039551c11"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/opauth/twitter/zipball/24792d512ccc67e7d11e9249737616f039551c11",
+                "reference": "24792d512ccc67e7d11e9249737616f039551c11",
+                "shasum": ""
+            },
+            "require": {
+                "opauth/opauth": ">=0.2.0",
+                "php": ">=5.2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "": "."
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "U-Zyn Chua",
+                    "email": "chua@uzyn.com",
+                    "homepage": "http://uzyn.com"
+                }
+            ],
+            "description": "Twitter strategy for Opauth",
+            "homepage": "http://opauth.org",
+            "keywords": [
+                "Authentication",
+                "auth",
+                "twitter"
+            ],
+            "time": "2013-06-12 07:50:11"
         },
         {
             "name": "pimple/pimple",
@@ -219,6 +312,59 @@
                 "microframework"
             ],
             "time": "2015-09-08 08:04:26"
+        },
+        {
+            "name": "symfony/asset",
+            "version": "v2.7.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/asset.git",
+                "reference": "290cc813d01532de9a04884f32f300b67eb3b84d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/asset/zipball/290cc813d01532de9a04884f32f300b67eb3b84d",
+                "reference": "290cc813d01532de9a04884f32f300b67eb3b84d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "symfony/http-foundation": "~2.4",
+                "symfony/phpunit-bridge": "~2.7"
+            },
+            "suggest": {
+                "symfony/http-foundation": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.7-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Asset\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Asset Component",
+            "homepage": "https://symfony.com",
+            "time": "2015-08-24 07:13:45"
         },
         {
             "name": "symfony/debug",
@@ -732,7 +878,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "icehero/silex-opauth": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
