@@ -1,7 +1,8 @@
 {
     "require": {
         "slimcontroller/slimcontroller": "0.4.3",
-        "twbs/bootstrap": "^3.3"
+        "twbs/bootstrap": "^3.3",
+        "opauth/opauth": "^0.4.4"
     },
     "autoload": {
         "psr-0": {

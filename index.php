@@ -4,12 +4,12 @@
 
 	if(getenv(APP_ENV) == 'development') {
 		define('ROOT_PATH', '/resumax');
-		define('ASSET_PATH', '/resumax/assets');
-		define('IMG_PATH', '/resumax/assets/img');
+		define('ASSET_PATH', '/resumax/web');
+		define('IMG_PATH', '/resumax/web/img');
 	} else {
 		define('ROOT_PATH', '/');
-		define('ASSET_PATH', '/assets');
-		define('IMG_PATH', '/assets/img');
+		define('ASSET_PATH', '/web');
+		define('IMG_PATH', '/web/img');
 	}
 
 	// load

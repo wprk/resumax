@@ -1,0 +1,25 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+	position: relative;
+	min-height: 100%;
+}
+body {
+	/* Margin bottom by footer height */
+	margin-bottom: @footer-height + @footer-border-height;
+}
+footer {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	/* Set the fixed height of the footer here */
+	height: @footer-height;
+	background: @footer-bg;
+	border-top: @footer-border-height solid @footer-border-color;
+}
+footer p {
+	line-height: @footer-height;
+	margin: 0;
+	color: #fff;
+}
