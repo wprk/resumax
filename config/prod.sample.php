@@ -7,8 +7,8 @@
 
 $app['db.options'] = array(
     'driver'   => 'pdo_mysql',
-    'dbname' => 'resumax',
+    'dbname' => 'exampledb',
     'host' => 'localhost',
-    'user' => 'root',
-    'password' => 'pelican123',
+    'user' => 'user',
+    'password' => 'password',
 );

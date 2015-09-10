@@ -22,16 +22,6 @@ $simpleUserProvider = new SimpleUser\UserServiceProvider();
 $app->register($simpleUserProvider);
 
 //
-// Controllers
-//
-
-$app->mount('/user', $simpleUserProvider);
-$app->get('/', function () use ($app) {
-    return $app['twig']->render('index.twig', array());
-});
-// $app->mount('', new Resumax\Website\Controllers\Router);
-
-//
 // Configuration
 //
 // Normally I'd put this stuff in config/prod.php and include it from index.php,
@@ -75,13 +65,23 @@ $app['user.options'] = array(
 // Example of defining a custom password strength validator.
 // Must return an error string on failure, or null on success.
 $app['user.passwordStrengthValidator'] = $app->protect(function(SimpleUser\User $user, $password) {
-    if (strlen($password) < 4) {
-        return 'Password must be at least 4 characters long.';
+    if (strlen($password) < 7) {
+        return 'Password must be at least 7 characters long.';
     }
     if (strtolower($password) == strtolower($user->getName())) {
         return 'Your password cannot be the same as your name.';
     }
 });
+
+//
+// Controllers
+//
+
+$app->mount('', new Resumax\Website\Controllers\ControllerProvider);
+$app->mount('/profile', $simpleUserProvider);
+// $app->get('/', function () use ($app) {
+//     return $app['twig']->render('index.twig', array());
+// });
 
 // Note that this db config is here for example only.
 // It actually gets overwritten by configuration in config/local.php,
@@ -93,8 +93,5 @@ $app['db.options'] = array(
     'user' => 'mydbuser',
     'password' => 'mydbpassword',
 );
-
-// Local environment configuration that doesn't get committed to version control.
-require __DIR__ . '/../config/local.php';
 
 return $app;

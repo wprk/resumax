@@ -23,7 +23,7 @@ class ProfileController
 
     public function indexAction(Request $request)
     {
-        return new Response($this->templating->render('profile/index.html.twig', array(
+        return new Response($this->templating->render('profile/index.twig', array(
 
         )));
     }
