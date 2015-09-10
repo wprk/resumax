@@ -13,8 +13,6 @@ namespace Resumax\Website\Controllers;
 
 use Silex\Application;
 use Silex\ControllerProviderInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Dynamic page controller.
@@ -32,22 +30,12 @@ class Router implements ControllerProviderInterface
         $controllers = $app['controllers_factory'];
 
         $profile = new ProfileController(
-            $app['twig'],
-            $app['form.factory']
+            $app['twig']
         );
 
         $controllers
             ->get('profile/home', array($profile, 'indexAction'))
             ->bind('profile');
-
-        $auth = new AuthController(
-            $app['twig'],
-            $app['form.factory']
-        );
-
-        $controllers
-            ->get('auth', array($auth, 'indexAction'))
-            ->bind('auth');
 
         return $controllers;
     }
