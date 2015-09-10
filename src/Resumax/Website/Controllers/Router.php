@@ -32,7 +32,8 @@ class Router implements ControllerProviderInterface
         $controllers = $app['controllers_factory'];
 
         $profile = new ProfileController(
-            $app['twig']
+            $app['twig'],
+            $app['form.factory']
         );
 
         $controllers
@@ -40,12 +41,13 @@ class Router implements ControllerProviderInterface
             ->bind('profile');
 
         $auth = new AuthController(
-            $app['twig']
+            $app['twig'],
+            $app['form.factory']
         );
 
         $controllers
-            ->get('auth', array($auth, 'authAction'))
-            ->bind('login');
+            ->get('auth', array($auth, 'indexAction'))
+            ->bind('auth');
 
         return $controllers;
     }

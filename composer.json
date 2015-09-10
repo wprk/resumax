@@ -5,7 +5,11 @@
         "symfony/twig-bridge": "^2.7",
         "twbs/bootstrap": "^3.3",
         "icehero/silex-opauth": "*@dev",
-        "opauth/twitter": "*"
+        "opauth/twitter": "*",
+        "symfony/form": "^2.7",
+        "symfony/validator": "^2.7",
+        "symfony/security-csrf": "^2.7",
+        "symfony/translation": "^2.7"
     },
     "autoload": {
         "psr-0": {

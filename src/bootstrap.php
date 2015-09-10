@@ -10,6 +10,9 @@ $app = new Silex\Application();
 
 $app['debug'] = true;
 
+$app->register(new Silex\Provider\FormServiceProvider, array(
+    'form.secret' => md5(__DIR__ . php_uname() . PHP_SAPI),
+));
 $app->register(new Silex\Provider\TwigServiceProvider, array(
     'twig.path' => array(
         __DIR__.'/../resources',
@@ -21,6 +24,8 @@ $app['twig.loader.filesystem'] = $app->share($app->extend('twig.loader.filesyste
 
     return $loader;
 }));
+
+$app->register(new Silex\Provider\TranslationServiceProvider);
 
 // Configure opauth
 $app['opauth'] = array(

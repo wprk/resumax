@@ -2,14 +2,19 @@
 
 namespace Resumax\Website\Controllers;
 
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Resumax\Website\Form\Type\LoginType;
 
 class ProfileController
 {
     /** @var \Twig_Environment Templating engine */
     private $templating;
+
+    /** @var FormFactoryInterface */
+    private $formFactory;
 
     /**
      * Constructor.
@@ -17,9 +22,11 @@ class ProfileController
      * @param Twig_Environment        $templating
      */
     public function __construct(
-        \Twig_Environment $templating
+        \Twig_Environment $templating,
+        FormFactoryInterface $formFactory
     ) {
         $this->templating = $templating;
+        $this->formFactory = $formFactory;
     }
 
     public function indexAction()
