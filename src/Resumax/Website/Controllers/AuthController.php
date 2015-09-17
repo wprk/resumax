@@ -12,13 +12,12 @@
 namespace Resumax\Website\Controllers;
 
 use InvalidArgumentException;
-use JasonGrimes\Paginator;
+use Resumax\Website\Auth\UserManager;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\DisabledException;
-use Resumax\Website\Auth\UserManager;
 
 /**
  * Controller with actions for handling form-based authentication and user management.
@@ -481,7 +480,7 @@ class AuthController
     {
         $this->editCustomFields = $editCustomFields;
     }
-    
+
     /**
      * @param boolean $passwordResetEnabled
      */
