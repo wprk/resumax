@@ -12,6 +12,7 @@ $app['twig.path'] = array(__DIR__ . '/../resources');
 $app['twig.loader.filesystem']->addPath(__DIR__ . '/../resources/user/', 'user');
 $app['twig.options'] = array('cache' => __DIR__ . '/../var/cache/twig');
 
+
 $app['security.firewalls'] = array(
     /*
     // Ensure that the login page is accessible to all
