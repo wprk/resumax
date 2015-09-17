@@ -40,7 +40,7 @@ class UserManager implements UserProviderInterface
     protected $userTableName = 'users';
 
     /** @var string */
-    protected $userCustomFieldsTableName = 'user_custom_fields';
+    protected $userCustomFieldsTableName = 'user_custom_field';
 
     /**
      * Constructor.

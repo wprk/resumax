@@ -70,7 +70,7 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
 
             // Override table names, if necessary.
             'userTableName' => 'users',
-            'userCustomFieldsTableName' => 'user_custom_fields',
+            'userCustomFieldsTableName' => 'user_custom_field',
         );
 
         // Initialize $app['user.options'].
@@ -253,10 +253,6 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
                 }
             });
 
-        $controllers->get('/{id}', 'user.controller:viewAction')
-            ->bind('user.view')
-            ->assert('id', '\d+');
-
         $controllers->method('GET|POST')->match('/{id}/edit', 'user.controller:editAction')
             ->bind('user.edit')
             ->before(function(Request $request) use ($app) {
@@ -264,9 +260,6 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
                     throw new AccessDeniedException();
                 }
             });
-
-        $controllers->get('/list', 'user.controller:listAction')
-            ->bind('user.list');
 
         $controllers->method('GET|POST')->match('/register', 'user.controller:registerAction')
             ->bind('user.register');

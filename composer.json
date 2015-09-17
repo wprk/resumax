@@ -5,7 +5,8 @@
         "symfony/security": "^2.7",
         "doctrine/dbal": "^2.5",
         "symfony/twig-bridge": "^2.7",
-        "swiftmailer/swiftmailer": "^5.4"
+        "swiftmailer/swiftmailer": "^5.4",
+        "davedevelopment/phpmig": "^1.2"
     },
     "autoload": {
         "psr-0": {
