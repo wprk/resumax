@@ -78,10 +78,7 @@ $app['user.passwordStrengthValidator'] = $app->protect(function(SimpleUser\User 
 //
 
 $app->mount('', new Resumax\Website\Controllers\ControllerProvider);
-$app->mount('/profile', $simpleUserProvider);
-// $app->get('/', function () use ($app) {
-//     return $app['twig']->render('index.twig', array());
-// });
+$app->mount('/user', $simpleUserProvider);
 
 // Note that this db config is here for example only.
 // It actually gets overwritten by configuration in config/local.php,
