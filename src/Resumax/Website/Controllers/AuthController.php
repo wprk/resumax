@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Resumax\Website\Auth;
+namespace Resumax\Website\Controllers;
 
 use InvalidArgumentException;
 use JasonGrimes\Paginator;
@@ -18,11 +18,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\DisabledException;
+use Resumax\Website\Auth\UserManager;
 
 /**
  * Controller with actions for handling form-based authentication and user management.
  */
-class UserController
+class AuthController
 {
     /** @var UserManager */
     protected $userManager;
@@ -35,9 +36,7 @@ class UserController
         'login-confirmation-needed' => '@user/login-confirmation-needed.twig',
         'forgot-password' => '@user/forgot-password.twig',
         'reset-password' => '@user/reset-password.twig',
-        'view' => '@user/view.twig',
         'edit' => '@user/edit.twig',
-        'list' => '@user/list.twig',
     );
 
     // Custom fields to support in the editAction().
@@ -125,7 +124,7 @@ class UserController
                     $app['session']->getFlashBag()->set('alert', 'Account created.');
 
                     // Redirect to user's new profile page.
-                    return $app->redirect($app['url_generator']->generate('user.view', array('id' => $user->getId())));
+                    return $app->redirect($app['url_generator']->generate('profile'));
                 }
             } catch (InvalidArgumentException $e) {
                 $error = $e->getMessage();
@@ -338,7 +337,7 @@ class UserController
 
                 $app['session']->getFlashBag()->set('alert', 'Your password has been reset and you are now signed in.');
 
-                return $app->redirect($app['url_generator']->generate('user.view', array('id' => $user->getId())));
+                return $app->redirect($app['url_generator']->generate('profile'));
             }
         }
 
@@ -381,36 +380,6 @@ class UserController
     }
 
     /**
-     * View user action.
-     *
-     * @param Application $app
-     * @param Request $request
-     * @param int $id
-     *
-     * @throws NotFoundHttpException if no user is found with that ID.
-     *
-     * @return Response
-     */
-    public function viewAction(Application $app, Request $request, $id)
-    {
-        $user = $this->userManager->getUser($id);
-
-        if (!$user) {
-            throw new NotFoundHttpException('No user was found with that ID.');
-        }
-
-        if (!$user->isEnabled() && !$app['security']->isGranted('ROLE_ADMIN')) {
-            throw new NotFoundHttpException('That user is disabled (pending email confirmation).');
-        }
-
-        return $app['twig']->render($this->getTemplate('view'), array(
-            'layout_template' => $this->getTemplate('layout'),
-            'user' => $user,
-            'imageUrl' => $this->getGravatarUrl($user->getEmail()),
-        ));
-    }
-
-    /**
      * @param Application $app
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -421,7 +390,7 @@ class UserController
             return $app->redirect($app['url_generator']->generate('user.login'));
         }
 
-        return $app->redirect($app['url_generator']->generate('user.view', array('id' => $app['user']->getId())));
+        return $app->redirect($app['url_generator']->generate('profile'));
     }
 
     /**
@@ -512,49 +481,7 @@ class UserController
     {
         $this->editCustomFields = $editCustomFields;
     }
-
-    public function listAction(Application $app, Request $request)
-    {
-        $order_by = $request->get('order_by') ?: 'name';
-        $order_dir = $request->get('order_dir') == 'DESC' ? 'DESC' : 'ASC';
-        $limit = (int) ($request->get('limit') ?: 50);
-        $page = (int) ($request->get('page') ?: 1);
-        $offset = ($page - 1) * $limit;
-
-        $criteria = array();
-        if (!$app['security']->isGranted('ROLE_ADMIN')) {
-            $criteria['isEnabled'] = true;
-        }
-
-        $users = $this->userManager->findBy($criteria, array(
-            'limit' => array($offset, $limit),
-            'order_by' => array($order_by, $order_dir),
-        ));
-        $numResults = $this->userManager->findCount($criteria);
-
-        $paginator = new Paginator($numResults, $limit, $page,
-            $app['url_generator']->generate('user.list') . '?page=(:num)&limit=' . $limit . '&order_by=' . $order_by . '&order_dir=' . $order_dir
-        );
-
-        foreach ($users as $user) {
-            $user->imageUrl = $this->getGravatarUrl($user->getEmail(), 40);
-        }
-
-        return $app['twig']->render($this->getTemplate('list'), array(
-            'layout_template' => $this->getTemplate('layout'),
-            'users' => $users,
-            'paginator' => $paginator,
-
-            // The following variables are no longer used in the default template,
-            // but are retained for backward compatibility.
-            'numResults' => $paginator->getTotalItems(),
-            'nextUrl' => $paginator->getNextUrl(),
-            'prevUrl' => $paginator->getPrevUrl(),
-            'firstResult' => $paginator->getCurrentPageFirstItem(),
-            'lastResult' => $paginator->getCurrentPageLastItem(),
-        ));
-    }
-
+    
     /**
      * @param boolean $passwordResetEnabled
      */
@@ -615,16 +542,6 @@ class UserController
     /**
      * @deprecated Use setTemplate() or setTemplates() instead.
      *
-     * @param string $listTemplate
-     */
-    public function setListTemplate($listTemplate)
-    {
-        $this->setTemplate('list', $listTemplate);
-    }
-
-    /**
-     * @deprecated Use setTemplate() or setTemplates() instead.
-     *
      * @param string $loginTemplate
      */
     public function setLoginTemplate($loginTemplate)
@@ -640,15 +557,5 @@ class UserController
     public function setRegisterTemplate($registerTemplate)
     {
         $this->setTemplate('register', $registerTemplate);
-    }
-
-    /**
-     * @deprecated Use setTemplate() or setTemplates() instead.
-     *
-     * @param string $viewTemplate
-     */
-    public function setViewTemplate($viewTemplate)
-    {
-        $this->setTemplate('view', $viewTemplate);
     }
 }

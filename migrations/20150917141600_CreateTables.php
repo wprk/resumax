@@ -51,8 +51,6 @@ class CreateTables extends Migration
             `isEnabled` TINYINT(1) NOT NULL DEFAULT '1',
             `confirmationToken` VARCHAR(100) NULL DEFAULT NULL,
             `timePasswordResetRequested` INT(11) UNSIGNED NULL DEFAULT NULL,
-            `user_custom_fields_user_id` INT(11) UNSIGNED NOT NULL,
-            `user_custom_fields_attribute` VARCHAR(50) NOT NULL,
             `created` datetime NOT NULL,
             `modified` datetime DEFAULT NULL,
             `removed` datetime DEFAULT NULL,
@@ -68,7 +66,7 @@ class CreateTables extends Migration
      */
     public function createUserCustomFieldsTable()
     {
-        $sql = "CREATE TABLE `user_custom_fields` (
+        $sql = "CREATE TABLE `user_custom_field` (
             `user_id` INT(11) UNSIGNED NOT NULL,
             `attribute` VARCHAR(50) NOT NULL DEFAULT '',
             `value` VARCHAR(255) NULL DEFAULT NULL,
@@ -161,7 +159,7 @@ class CreateTables extends Migration
         $sql = "CREATE TABLE `tags` (
             `tag_id` INT(20) UNSIGNED NOT NULL,
             `foreign_key_id` INT(14) UNSIGNED NULL,
-            `type` ENUM('profile', 'role', 'responsibility') NOT NULL,
+            `type` VARCHAR(20) NOT NULL,
             `tags` VARCHAR(255) NOT NULL,
             `created` datetime NOT NULL,
             `modified` datetime DEFAULT NULL,

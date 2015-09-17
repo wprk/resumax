@@ -11,6 +11,7 @@
 
 namespace Resumax\Website\Auth;
 
+use Resumax\Website\Controllers\AuthController;
 use Silex\Application;
 use Silex\ControllerCollection;
 use Silex\ControllerProviderInterface;
@@ -99,14 +100,8 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
                 if (isset($app['user.options']['registerTemplate']) && !isset($app['user.options']['templates']['register'])) {
                     $options['templates']['register'] = $app['user.options']['registerTemplate'];
                 }
-                if (isset($app['user.options']['viewTemplate']) && !isset($app['user.options']['templates']['view'])) {
-                    $options['templates']['view'] = $app['user.options']['viewTemplate'];
-                }
                 if (isset($app['user.options']['editTemplate']) && !isset($app['user.options']['templates']['edit'])) {
                     $options['templates']['edit'] = $app['user.options']['editTemplate'];
-                }
-                if (isset($app['user.options']['listTemplate']) && !isset($app['user.options']['templates']['list'])) {
-                    $options['templates']['list'] = $app['user.options']['listTemplate'];
                 }
             }
             $app['user.options'] = $options;
@@ -137,7 +132,7 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
         $app['user.controller'] = $app->share(function ($app) {
             $app['user.options.init']();
 
-            $controller = new UserController($app['user.manager']);
+            $controller = new AuthController($app['user.manager']);
             $controller->setUsernameRequired($app['user.options']['isUsernameRequired']);
             $controller->setEmailConfirmationRequired($app['user.options']['emailConfirmation']['required']);
             $controller->setTemplates($app['user.options']['templates']);
