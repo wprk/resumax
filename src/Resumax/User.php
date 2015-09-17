@@ -2,7 +2,7 @@
 
 namespace Resumax;
 
-use SimpleUser\User as BaseUser;
+use Resumax\Website\Auth\User as BaseUser;
 
 class User extends BaseUser
 {

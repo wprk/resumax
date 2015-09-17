@@ -1,7 +1,11 @@
 {
     "require": {
-        "jasongrimes/silex-simpleuser": "~1.0",
-        "twbs/bootstrap": "^3.3"
+        "twbs/bootstrap": "^3.3",
+        "silex/silex": "~1",
+        "symfony/security": "^2.7",
+        "doctrine/dbal": "^2.5",
+        "symfony/twig-bridge": "^2.7",
+        "swiftmailer/swiftmailer": "^5.4"
     },
     "autoload": {
         "psr-0": {
