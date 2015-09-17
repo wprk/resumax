@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Resumax CV Manager package.
+ *
+ * (c) Will Parker <will@wipar.co.uk>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 $app['db.options'] = array(
     'driver'   => 'pdo_mysql',
     'dbname' => 'resumax',
@@ -11,7 +20,6 @@ $app['db.options'] = array(
 $app['twig.path'] = array(__DIR__ . '/../resources');
 $app['twig.loader.filesystem']->addPath(__DIR__ . '/../resources/user/', 'user');
 $app['twig.options'] = array('cache' => __DIR__ . '/../var/cache/twig');
-
 
 $app['security.firewalls'] = array(
     /*
@@ -30,7 +38,7 @@ $app['security.firewalls'] = array(
         'logout' => array(
             'logout_path' => '/user/logout',
         ),
-        'users' => $app->share(function($app) { return $app['user.manager']; }),
+        'users' => $app->share(function ($app) { return $app['user.manager']; }),
     ),
 );
 

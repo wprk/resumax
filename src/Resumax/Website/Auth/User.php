@@ -1,13 +1,20 @@
 <?php
 
+/*
+ * This file is part of the Resumax CV Manager package.
+ *
+ * (c) Will Parker <will@wipar.co.uk>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Resumax\Website\Auth;
 
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
  * A simple User model.
- *
- * @package Resumax\Website\Auth
  */
 class User implements AdvancedUserInterface, \Serializable
 {
@@ -65,6 +72,7 @@ class User implements AdvancedUserInterface, \Serializable
      * Test whether the user has the given role.
      *
      * @param string $role
+     *
      * @return bool
      */
     public function hasRole($role)
@@ -178,6 +186,7 @@ class User implements AdvancedUserInterface, \Serializable
      * This method is required by the UserInterface.
      *
      * @see getRealUsername
+     *
      * @return string The username, if not empty, otherwise the email.
      */
     public function getUsername()
@@ -191,6 +200,7 @@ class User implements AdvancedUserInterface, \Serializable
      * Compare to getUsername, which returns the email if username is not set.
      *
      * @see getUsername
+     *
      * @return string|null
      */
     public function getRealUsername()
@@ -310,9 +320,8 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function unserialize($serialized)
     {
-        list (
-            $this->id,
-            ) = unserialize($serialized);
+        list(
+            $this->id) = unserialize($serialized);
     }
 
     /**
@@ -326,16 +335,16 @@ class User implements AdvancedUserInterface, \Serializable
 
         if (!$this->getEmail()) {
             $errors['email'] = 'Email address is required.';
-        } else if (!strpos($this->getEmail(), '@')) {
+        } elseif (!strpos($this->getEmail(), '@')) {
             // Basic email format sanity check. Real validation comes from sending them an email with a link they have to click.
             $errors['email'] = 'Email address appears to be invalid.';
-        } else if (strlen($this->getEmail()) > 100) {
+        } elseif (strlen($this->getEmail()) > 100) {
             $errors['email'] = 'Email address can\'t be longer than 100 characters.';
         }
 
         if (!$this->getPassword()) {
             $errors['password'] = 'Password is required.';
-        } else if (strlen($this->getPassword()) > 255) {
+        } elseif (strlen($this->getPassword()) > 255) {
             $errors['password'] = 'Password can\'t be longer than 255 characters.';
         }
 
@@ -355,6 +364,7 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @param string $customField
+     *
      * @return bool
      */
     public function hasCustomField($customField)
@@ -364,6 +374,7 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @param string $customField
+     *
      * @return mixed|null
      */
     public function getCustomField($customField)
@@ -395,7 +406,6 @@ class User implements AdvancedUserInterface, \Serializable
     {
         return $this->customFields;
     }
-
 
     /**
      * Checks whether the user's account has expired.
@@ -485,6 +495,7 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @param int $timestamp
+     *
      * @throws \InvalidArgumentException if $timestamp is not an integer.
      */
     public function setTimePasswordResetRequested($timestamp)
@@ -506,6 +517,7 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @param int $ttl Password reset request TTL, in seconds.
+     *
      * @return bool
      */
     public function isPasswordResetRequestExpired($ttl)

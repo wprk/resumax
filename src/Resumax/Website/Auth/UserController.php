@@ -1,19 +1,26 @@
 <?php
 
+/*
+ * This file is part of the Resumax CV Manager package.
+ *
+ * (c) Will Parker <will@wipar.co.uk>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Resumax\Website\Auth;
 
+use InvalidArgumentException;
+use JasonGrimes\Paginator;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\DisabledException;
-use InvalidArgumentException;
-use JasonGrimes\Paginator;
 
 /**
  * Controller with actions for handling form-based authentication and user management.
- *
- * @package Resumax\Website\Auth
  */
 class UserController
 {
@@ -72,6 +79,7 @@ class UserController
 
     /**
      * @param string $key
+     *
      * @return string|null
      */
     public function getTemplate($key)
@@ -84,6 +92,7 @@ class UserController
      *
      * @param Application $app
      * @param Request $request
+     *
      * @return Response
      */
     public function registerAction(Application $app, Request $request)
@@ -118,7 +127,6 @@ class UserController
                     // Redirect to user's new profile page.
                     return $app->redirect($app['url_generator']->generate('user.view', array('id' => $user->getId())));
                 }
-
             } catch (InvalidArgumentException $e) {
                 $error = $e->getMessage();
             }
@@ -140,8 +148,10 @@ class UserController
      * @param Application $app
      * @param Request $request
      * @param string $token
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function confirmEmailAction(Application $app, Request $request, $token)
     {
@@ -168,6 +178,7 @@ class UserController
      *
      * @param Application $app
      * @param Request $request
+     *
      * @return Response
      */
     public function loginAction(Application $app, Request $request)
@@ -202,8 +213,10 @@ class UserController
      *
      * @param Application $app
      * @param Request $request
-     * @return mixed
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     *
+     * @return mixed
      */
     public function resendConfirmationAction(Application $app, Request $request)
     {
@@ -230,8 +243,10 @@ class UserController
     /**
      * @param Application $app
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function forgotPasswordAction(Application $app, Request $request)
     {
@@ -259,10 +274,11 @@ class UserController
                 return $app->redirect($app['url_generator']->generate('user.login'));
             }
             $error = 'No user account was found with that email address.';
-
         } else {
             $email = $request->request->get('email') ?: ($request->query->get('email') ?: $app['session']->get('_security.last_username'));
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $email = '';
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $email = '';
+            }
         }
 
         return $app['twig']->render($this->getTemplate('forgot-password'), array(
@@ -277,8 +293,10 @@ class UserController
      * @param Application $app
      * @param Request $request
      * @param string $token
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function resetPasswordAction(Application $app, Request $request, $token)
     {
@@ -291,12 +309,13 @@ class UserController
         $user = $this->userManager->findOneBy(array('customFields' => array('su:confirmationToken' => $token)));
         if (!$user) {
             $tokenExpired = true;
-        } else if ($user->isPasswordResetRequestExpired($app['user.options']['passwordReset']['tokenTTL'])) {
+        } elseif ($user->isPasswordResetRequestExpired($app['user.options']['passwordReset']['tokenTTL'])) {
             $tokenExpired = true;
         }
 
         if ($tokenExpired) {
             $app['session']->getFlashBag()->set('alert', 'Sorry, your password reset link has expired.');
+
             return $app->redirect($app['url_generator']->generate('user.login'));
         }
 
@@ -306,7 +325,7 @@ class UserController
             $password = $request->request->get('password');
             if ($password != $request->request->get('confirm_password')) {
                 $error = 'Passwords don\'t match.';
-            } else if ($error = $this->userManager->validatePasswordStrength($user, $password)) {
+            } elseif ($error = $this->userManager->validatePasswordStrength($user, $password)) {
                 ;
             } else {
                 // Set the password and log in.
@@ -333,8 +352,10 @@ class UserController
 
     /**
      * @param Request $request
-     * @return User
+     *
      * @throws InvalidArgumentException
+     *
+     * @return User
      */
     protected function createUserFromRequest(Request $request)
     {
@@ -365,8 +386,10 @@ class UserController
      * @param Application $app
      * @param Request $request
      * @param int $id
-     * @return Response
+     *
      * @throws NotFoundHttpException if no user is found with that ID.
+     *
+     * @return Response
      */
     public function viewAction(Application $app, Request $request, $id)
     {
@@ -385,14 +408,15 @@ class UserController
             'user' => $user,
             'imageUrl' => $this->getGravatarUrl($user->getEmail()),
         ));
-
     }
 
     /**
      * @param Application $app
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function viewSelfAction(Application $app) {
+    public function viewSelfAction(Application $app)
+    {
         if (!$app['user']) {
             return $app->redirect($app['url_generator']->generate('user.login'));
         }
@@ -403,6 +427,7 @@ class UserController
     /**
      * @param string $email
      * @param int $size
+     *
      * @return string
      */
     protected function getGravatarUrl($email, $size = 80)
@@ -417,8 +442,10 @@ class UserController
      * @param Application $app
      * @param Request $request
      * @param int $id
-     * @return Response
+     *
      * @throws NotFoundHttpException if no user is found with that ID.
+     *
+     * @return Response
      */
     public function editAction(Application $app, Request $request, $id)
     {
@@ -440,7 +467,7 @@ class UserController
             if ($request->request->get('password')) {
                 if ($request->request->get('password') != $request->request->get('confirm_password')) {
                     $errors['password'] = 'Passwords don\'t match.';
-                } else if ($error = $this->userManager->validatePasswordStrength($user, $request->request->get('password'))) {
+                } elseif ($error = $this->userManager->validatePasswordStrength($user, $request->request->get('password'))) {
                     $errors['password'] = $error;
                 } else {
                     $this->userManager->setUserPassword($user, $request->request->get('password'));
@@ -486,13 +513,12 @@ class UserController
         $this->editCustomFields = $editCustomFields;
     }
 
-
     public function listAction(Application $app, Request $request)
     {
         $order_by = $request->get('order_by') ?: 'name';
         $order_dir = $request->get('order_dir') == 'DESC' ? 'DESC' : 'ASC';
-        $limit = (int)($request->get('limit') ?: 50);
-        $page = (int)($request->get('page') ?: 1);
+        $limit = (int) ($request->get('limit') ?: 50);
+        $page = (int) ($request->get('page') ?: 1);
         $offset = ($page - 1) * $limit;
 
         $criteria = array();
@@ -568,6 +594,7 @@ class UserController
 
     /**
      * @param string $layoutTemplate
+     *
      * @deprecated Use setTemplate() or setTemplates() instead.
      */
     public function setLayoutTemplate($layoutTemplate)
@@ -577,6 +604,7 @@ class UserController
 
     /**
      * @deprecated Use setTemplate() or setTemplates() instead.
+     *
      * @param string $editTemplate
      */
     public function setEditTemplate($editTemplate)
@@ -586,6 +614,7 @@ class UserController
 
     /**
      * @deprecated Use setTemplate() or setTemplates() instead.
+     *
      * @param string $listTemplate
      */
     public function setListTemplate($listTemplate)
@@ -595,6 +624,7 @@ class UserController
 
     /**
      * @deprecated Use setTemplate() or setTemplates() instead.
+     *
      * @param string $loginTemplate
      */
     public function setLoginTemplate($loginTemplate)
@@ -604,6 +634,7 @@ class UserController
 
     /**
      * @deprecated Use setTemplate() or setTemplates() instead.
+     *
      * @param string $registerTemplate
      */
     public function setRegisterTemplate($registerTemplate)
@@ -613,6 +644,7 @@ class UserController
 
     /**
      * @deprecated Use setTemplate() or setTemplates() instead.
+     *
      * @param string $viewTemplate
      */
     public function setViewTemplate($viewTemplate)

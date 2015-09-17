@@ -1,12 +1,21 @@
 <?php
 
+/*
+ * This file is part of the Resumax CV Manager package.
+ *
+ * (c) Will Parker <will@wipar.co.uk>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Resumax\Website\Auth;
 
 use Silex\Application;
-use Silex\ServiceProviderInterface;
-use Silex\ControllerProviderInterface;
 use Silex\ControllerCollection;
+use Silex\ControllerProviderInterface;
 use Silex\ServiceControllerResolver;
+use Silex\ServiceProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleHierarchyVoter;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -74,7 +83,7 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
         );
 
         // Initialize $app['user.options'].
-        $app['user.options.init'] = $app->protect(function() use ($app) {
+        $app['user.options.init'] = $app->protect(function () use ($app) {
             $options = $app['user.options.default'];
             if (isset($app['user.options'])) {
                 // Merge default and configured options
@@ -104,10 +113,10 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
         });
 
         // Token generator.
-        $app['user.tokenGenerator'] = $app->share(function($app) { return new TokenGenerator($app['logger']); });
+        $app['user.tokenGenerator'] = $app->share(function ($app) { return new TokenGenerator($app['logger']); });
 
         // User manager.
-        $app['user.manager'] = $app->share(function($app) {
+        $app['user.manager'] = $app->share(function ($app) {
             $app['user.options.init']();
 
             $userManager = new UserManager($app['db'], $app);
@@ -120,7 +129,7 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
         });
 
         // Current user.
-        $app['user'] = $app->share(function($app) {
+        $app['user'] = $app->share(function ($app) {
             return ($app['user.manager']->getCurrentUser());
         });
 
@@ -138,13 +147,19 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
         });
 
         // User mailer.
-        $app['user.mailer'] = $app->share(function($app) {
+        $app['user.mailer'] = $app->share(function ($app) {
             $app['user.options.init']();
 
             $missingDeps = array();
-            if (!isset($app['mailer'])) $missingDeps[] = 'SwiftMailerServiceProvider';
-            if (!isset($app['url_generator'])) $missingDeps[] = 'UrlGeneratorServiceProvider';
-            if (!isset($app['twig'])) $missingDeps[] = 'TwigServiceProvider';
+            if (!isset($app['mailer'])) {
+                $missingDeps[] = 'SwiftMailerServiceProvider';
+            }
+            if (!isset($app['url_generator'])) {
+                $missingDeps[] = 'UrlGeneratorServiceProvider';
+            }
+            if (!isset($app['twig'])) {
+                $missingDeps[] = 'TwigServiceProvider';
+            }
             if (!empty($missingDeps)) {
                 throw new \RuntimeException('To access the Resumax Auth mailer you must enable the following missing dependencies: ' . implode(', ', $missingDeps));
             }
@@ -163,7 +178,7 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
         });
 
         // Add a custom security voter to support testing user attributes.
-        $app['security.voters'] = $app->extend('security.voters', function($voters) use ($app) {
+        $app['security.voters'] = $app->extend('security.voters', function ($voters) use ($app) {
             foreach ($voters as $voter) {
                 if ($voter instanceof RoleHierarchyVoter) {
                     $roleHierarchyVoter = $voter;
@@ -171,6 +186,7 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
                 }
             }
             $voters[] = new EditUserVoter($roleHierarchyVoter);
+
             return $voters;
         });
 
@@ -230,8 +246,9 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
      *
      * @param Application $app An Application instance
      *
-     * @return ControllerCollection A ControllerCollection instance
      * @throws \LogicException if ServiceController service provider is not registered.
+     *
+     * @return ControllerCollection A ControllerCollection instance
      */
     public function connect(Application $app)
     {
@@ -245,7 +262,7 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
 
         $controllers->get('/', 'user.controller:viewSelfAction')
             ->bind('user')
-            ->before(function(Request $request) use ($app) {
+            ->before(function (Request $request) use ($app) {
                 // Require login. This should never actually cause access to be denied,
                 // but it causes a login form to be rendered if the viewer is not logged in.
                 if (!$app['user']) {
@@ -255,7 +272,7 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
 
         $controllers->method('GET|POST')->match('/{id}/edit', 'user.controller:editAction')
             ->bind('user.edit')
-            ->before(function(Request $request) use ($app) {
+            ->before(function (Request $request) use ($app) {
                 if (!$app['security']->isGranted('EDIT_USER_ID', $request->get('id'))) {
                     throw new AccessDeniedException();
                 }
@@ -281,9 +298,9 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
 
         // login_check and logout are dummy routes so we can use the names.
         // The security provider should intercept these, so no controller is needed.
-        $controllers->method('GET|POST')->match('/login_check', function() {})
+        $controllers->method('GET|POST')->match('/login_check', function () {})
             ->bind('user.login_check');
-        $controllers->get('/logout', function() {})
+        $controllers->get('/logout', function () {})
             ->bind('user.logout');
 
         return $controllers;

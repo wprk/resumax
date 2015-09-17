@@ -8,6 +8,15 @@
         "swiftmailer/swiftmailer": "^5.4",
         "davedevelopment/phpmig": "^1.2"
     },
+    "require-dev": {
+        "fabpot/php-cs-fixer": "~1.6"
+    },
+    "scripts": {
+        "cs": "php-cs-fixer fix",
+        "deploy": [
+            "vendor/bin/phpmig migrate"
+        ]
+    },
     "autoload": {
         "psr-0": {
         	"Resumax": "src/"

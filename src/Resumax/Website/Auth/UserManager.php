@@ -1,17 +1,25 @@
 <?php
 
+/*
+ * This file is part of the Resumax CV Manager package.
+ *
+ * (c) Will Parker <will@wipar.co.uk>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Resumax\Website\Auth;
 
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Doctrine\DBAL\Connection;
 use Silex\Application;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class UserManager implements UserProviderInterface
 {
@@ -63,8 +71,10 @@ class UserManager implements UserProviderInterface
      * Required by UserProviderInterface.
      *
      * @param string $username The username
-     * @return UserInterface
+     *
      * @throws UsernameNotFoundException if the user is not found
+     *
+     * @return UserInterface
      */
     public function loadUserByUsername($username)
     {
@@ -94,8 +104,10 @@ class UserManager implements UserProviderInterface
      * map.
      *
      * @param UserInterface $user
-     * @return UserInterface
+     *
      * @throws UnsupportedUserException if the account is not supported
+     *
+     * @return UserInterface
      */
     public function refreshUser(UserInterface $user)
     {
@@ -107,9 +119,10 @@ class UserManager implements UserProviderInterface
     }
 
     /**
-     * Whether this provider supports the given user class
+     * Whether this provider supports the given user class.
      *
      * @param string $class
+     *
      * @return Boolean
      */
     public function supportsClass($class)
@@ -123,6 +136,7 @@ class UserManager implements UserProviderInterface
      * Reconstitute a User object from stored data.
      *
      * @param array $data
+     *
      * @return User
      */
     protected function hydrateUser(array $data)
@@ -153,11 +167,11 @@ class UserManager implements UserProviderInterface
      * @param string $plainPassword
      * @param string $name
      * @param array $roles
+     *
      * @return User
      */
     public function createUser($email, $plainPassword, $name = null, $roles = array())
     {
-
         $userClass = $this->getUserClass();
 
         $user = new $userClass($email);
@@ -180,6 +194,7 @@ class UserManager implements UserProviderInterface
      * Get the password encoder to use for the given user object.
      *
      * @param UserInterface $user
+     *
      * @return PasswordEncoderInterface
      */
     protected function getEncoder(UserInterface $user)
@@ -192,11 +207,13 @@ class UserManager implements UserProviderInterface
      *
      * @param User $user
      * @param string $password A plain text password.
+     *
      * @return string An encoded password.
      */
     public function encodeUserPassword(User $user, $password)
     {
         $encoder = $this->getEncoder($user);
+
         return $encoder->encodePassword($password, $user->getSalt());
     }
 
@@ -223,6 +240,7 @@ class UserManager implements UserProviderInterface
      *
      * @param User $user
      * @param $password
+     *
      * @return string|null An error message if validation fails, null if validation succeeds.
      */
     public function validatePasswordStrength(User $user, $password)
@@ -236,12 +254,12 @@ class UserManager implements UserProviderInterface
     public function getPasswordStrengthValidator()
     {
         if (!is_callable($this->passwordStrengthValidator)) {
-            return function(User $user, $password) {
+            return function (User $user, $password) {
                 if (empty($password)) {
                     return 'Password cannot be empty.';
                 }
 
-                return null;
+                return;
             };
         }
 
@@ -255,6 +273,7 @@ class UserManager implements UserProviderInterface
      * and return an error string on failure or null on success.
      *
      * @param Callable $callable
+     *
      * @throws \InvalidArgumentException
      */
     public function setPasswordStrengthValidator($callable)
@@ -271,6 +290,7 @@ class UserManager implements UserProviderInterface
      *
      * @param User $user
      * @param string $password
+     *
      * @return bool
      */
     public function checkUserPassword(User $user, $password)
@@ -289,7 +309,7 @@ class UserManager implements UserProviderInterface
             return $this->app['security']->getToken()->getUser();
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -297,7 +317,7 @@ class UserManager implements UserProviderInterface
      *
      * @return boolean
      */
-    function isLoggedIn()
+    public function isLoggedIn()
     {
         $token = $this->app['security']->getToken();
         if (null === $token) {
@@ -311,6 +331,7 @@ class UserManager implements UserProviderInterface
      * Get a User instance by its ID.
      *
      * @param int $id
+     *
      * @return User|null The User, or null if there is no User with that ID.
      */
     public function getUser($id)
@@ -322,6 +343,7 @@ class UserManager implements UserProviderInterface
      * Get a single User instance that matches the given criteria. If more than one User matches, the first result is returned.
      *
      * @param array $criteria
+     *
      * @return User|null
      */
     public function findOneBy(array $criteria)
@@ -329,7 +351,7 @@ class UserManager implements UserProviderInterface
         $users = $this->findBy($criteria);
 
         if (empty($users)) {
-            return null;
+            return;
         }
 
         return reset($users);
@@ -343,6 +365,7 @@ class UserManager implements UserProviderInterface
      *      limit (int|array) The maximum number of results to return, or an array of (offset, limit).
      *      order_by (string|array) The name of the column to order by, or an array of column name and direction, ex. array(time_created, DESC)
      * </pre>
+     *
      * @return User[] An array of matching User instances, or an empty array if no matching users were found.
      */
     public function findBy(array $criteria = array(), array $options = array())
@@ -352,17 +375,17 @@ class UserManager implements UserProviderInterface
             return array($this->identityMap[$criteria['id']]);
         }
 
-        list ($common_sql, $params) = $this->createCommonFindSql($criteria);
+        list($common_sql, $params) = $this->createCommonFindSql($criteria);
 
         $sql = 'SELECT * ' . $common_sql;
 
         if (array_key_exists('order_by', $options)) {
-            list ($order_by, $order_dir) = is_array($options['order_by']) ? $options['order_by'] : array($options['order_by']);
+            list($order_by, $order_dir) = is_array($options['order_by']) ? $options['order_by'] : array($options['order_by']);
             $sql .= 'ORDER BY ' . $this->conn->quoteIdentifier($order_by) . ' ' . ($order_dir == 'DESC' ? 'DESC' : 'ASC') . ' ';
         }
         if (array_key_exists('limit', $options)) {
-            list ($offset, $limit) = is_array($options['limit']) ? $options['limit'] : array(0, $options['limit']);
-            $sql .=   ' LIMIT ' . (int) $limit . ' ' .' OFFSET ' . (int) $offset ;
+            list($offset, $limit) = is_array($options['limit']) ? $options['limit'] : array(0, $options['limit']);
+            $sql .=   ' LIMIT ' . (int) $limit . ' ' .' OFFSET ' . (int) $offset;
         }
 
         $data = $this->conn->fetchAll($sql, $params);
@@ -384,6 +407,7 @@ class UserManager implements UserProviderInterface
 
     /**
      * @param $userId
+     *
      * @return array
      */
     protected function getUserCustomFields($userId)
@@ -402,6 +426,7 @@ class UserManager implements UserProviderInterface
      * Get SQL query fragment common to both find and count querires.
      *
      * @param array $criteria
+     *
      * @return array An array of SQL and query parameters, in the form array($sql, $params)
      */
     protected function createCommonFindSql(array $criteria = array())
@@ -436,10 +461,13 @@ class UserManager implements UserProviderInterface
         foreach ($criteria as $key => $val) {
             if ($key == 'customFields') {
                 continue;
-            } else if ($key == 'isEnabled') {
+            } elseif ($key == 'isEnabled') {
                 $sql .= ($first_crit ? 'WHERE' : 'AND') . ' ';
-                if ($val) $sql .= '(enabled_field.value = 1 OR enabled_field.value IS NULL) ';
-                else $sql .= 'enabled_field.value = 0 ';
+                if ($val) {
+                    $sql .= '(enabled_field.value = 1 OR enabled_field.value IS NULL) ';
+                } else {
+                    $sql .= 'enabled_field.value = 0 ';
+                }
             } else {
                 $sql .= ($first_crit ? 'WHERE' : 'AND') . ' ' . $key . ' = :' . $key . ' ';
                 $params[$key] = $val;
@@ -447,18 +475,19 @@ class UserManager implements UserProviderInterface
             $first_crit = false;
         }
 
-        return array ($sql, $params);
+        return array($sql, $params);
     }
 
     /**
      * Count users that match the given criteria.
      *
      * @param array $criteria
+     *
      * @return int The number of users that match the criteria.
      */
     public function findCount(array $criteria = array())
     {
-        list ($common_sql, $params) = $this->createCommonFindSql($criteria);
+        list($common_sql, $params) = $this->createCommonFindSql($criteria);
 
         $sql = 'SELECT COUNT(*) ' . $common_sql;
 
@@ -568,6 +597,7 @@ class UserManager implements UserProviderInterface
      * and additionally tests that the User's email address and username (if set) are unique across all users.'.
      *
      * @param User $user
+     *
      * @return array An array of error messages, or an empty array if the User is valid.
      */
     public function validate(User $user)
@@ -616,9 +646,9 @@ class UserManager implements UserProviderInterface
     {
         if ($user === null) {
             $this->identityMap = array();
-        } else if ($user instanceof User && array_key_exists($user->getId(), $this->identityMap)) {
+        } elseif ($user instanceof User && array_key_exists($user->getId(), $this->identityMap)) {
             unset($this->identityMap[$user->getId()]);
-        } else if (is_numeric($user) && array_key_exists($user, $this->identityMap)) {
+        } elseif (is_numeric($user) && array_key_exists($user, $this->identityMap)) {
             unset($this->identityMap[$user]);
         }
     }
@@ -658,7 +688,6 @@ class UserManager implements UserProviderInterface
     {
         return $this->userTableName;
     }
-
 
     public function setUserCustomFieldsTableName($userCustomFieldsTableName)
     {

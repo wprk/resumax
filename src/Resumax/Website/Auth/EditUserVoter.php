@@ -1,11 +1,19 @@
 <?php
 
+/*
+ * This file is part of the Resumax CV Manager package.
+ *
+ * (c) Will Parker <will@wipar.co.uk>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Resumax\Website\Auth;
 
-use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleHierarchyVoter;
-use Resumax\Website\Auth\User;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class EditUserVoter implements VoterInterface
 {
@@ -71,11 +79,13 @@ class EditUserVoter implements VoterInterface
 
             if ($attribute == 'EDIT_USER') {
                 $user2 = $object;
+
                 return $this->usersHaveSameId($user, $user2) ? VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
             }
 
             if ($attribute == 'EDIT_USER_ID') {
                 $id = $object;
+
                 return $this->hasUserId($user, $id) ? VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
             }
         }
@@ -102,5 +112,4 @@ class EditUserVoter implements VoterInterface
             && $user1->getId() > 0
             && $user1->getId() == $user2->getId();
     }
-
 }
