@@ -118,8 +118,8 @@ class AuthController
 
                     $app['session']->getFlashBag()->set('alert', 'Account created.');
 
-                    // Redirect to user's new profile page.
-                    return $app->redirect($app['url_generator']->generate('profile'));
+                    // Redirect to user's cv page.
+                    return $app->redirect($app['url_generator']->generate('cv'));
                 }
             } catch (InvalidArgumentException $e) {
                 $error = $e->getMessage();
@@ -162,7 +162,7 @@ class AuthController
 
         $app['session']->getFlashBag()->set('alert', 'Thank you! Your account has been activated.');
 
-        return $app->redirect($app['url_generator']->generate('user.view', array('id' => $user->getId())));
+        return $app->redirect($app['url_generator']->generate('cv'));
     }
 
     /**
@@ -189,6 +189,10 @@ class AuthController
                 'fromAddress' => $app['user.mailer']->getFromAddress(),
                 'resendUrl' => $app['url_generator']->generate('user.resend-confirmation'),
             ));
+        }
+
+        if ($this->userManager->isLoggedIn()) {
+            return $app->redirect($app['url_generator']->generate('cv'));
         }
 
         return $app['twig']->render($this->getTemplate('login'), array(
@@ -330,7 +334,7 @@ class AuthController
 
                 $app['session']->getFlashBag()->set('alert', 'Your password has been reset and you are now signed in.');
 
-                return $app->redirect($app['url_generator']->generate('profile'));
+                return $app->redirect($app['url_generator']->generate('cv'));
             }
         }
 
@@ -379,7 +383,7 @@ class AuthController
             return $app->redirect($app['url_generator']->generate('user.login'));
         }
 
-        return $app->redirect($app['url_generator']->generate('profile'));
+        return $app->redirect($app['url_generator']->generate('cv'));
     }
 
     /**
@@ -454,53 +458,5 @@ class AuthController
     public function setEmailConfirmationRequired($isRequired)
     {
         $this->isEmailConfirmationRequired = (bool) $isRequired;
-    }
-
-    // ---------------------------------------------------------------------------
-    //
-    // Deprecated methods.
-    //
-    // Retained for backwards compatibility.
-    //
-    // ---------------------------------------------------------------------------
-
-    /**
-     * @param string $layoutTemplate
-     *
-     * @deprecated Use setTemplate() or setTemplates() instead.
-     */
-    public function setLayoutTemplate($layoutTemplate)
-    {
-        $this->setTemplate('layout', $layoutTemplate);
-    }
-
-    /**
-     * @deprecated Use setTemplate() or setTemplates() instead.
-     *
-     * @param string $editTemplate
-     */
-    public function setEditTemplate($editTemplate)
-    {
-        $this->setTemplate('edit', $editTemplate);
-    }
-
-    /**
-     * @deprecated Use setTemplate() or setTemplates() instead.
-     *
-     * @param string $loginTemplate
-     */
-    public function setLoginTemplate($loginTemplate)
-    {
-        $this->setTemplate('login', $loginTemplate);
-    }
-
-    /**
-     * @deprecated Use setTemplate() or setTemplates() instead.
-     *
-     * @param string $registerTemplate
-     */
-    public function setRegisterTemplate($registerTemplate)
-    {
-        $this->setTemplate('register', $registerTemplate);
     }
 }

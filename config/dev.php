@@ -23,5 +23,10 @@ $app['db.options'] = array(
 );
 
 $app['user.options'] = array(
-    'mailer' => array('enabled' => true)
+    'templates' => array(
+        'layout' => 'layout.twig',
+        'view' => 'view.twig',
+    ),
+    'mailer' => array('enabled' => false),
+    'userClass' => '\Resumax\Website\Auth\User',
 );

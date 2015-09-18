@@ -48,5 +48,5 @@ $app['user.options'] = array(
         'view' => 'view.twig',
     ),
     'mailer' => array('enabled' => true),
-    'userClass' => '\Resumax\User',
+    'userClass' => '\Resumax\Website\Auth\User',
 );

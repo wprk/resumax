@@ -221,7 +221,7 @@ class CreateTables extends Migration
      */
     public function dropUserCustomFieldTable()
     {
-        $sql = "DROP TABLE `users_custom_field`;";
+        $sql = "DROP TABLE `user_custom_field`;";
         $container = $this->getContainer();
         $container['db']->query($sql);
     }
