@@ -10,7 +10,7 @@ class CreateTables extends Migration
     public function up()
     {
         $this->createUsersTable();
-        $this->createUserCustomFieldsTable();
+        $this->createUserCustomFieldTable();
         $this->createUserPersonalProfileTable();
         $this->createUserPreviousRoleTable();
         $this->createUserPreviousRoleResponsibilityTable();
@@ -25,7 +25,7 @@ class CreateTables extends Migration
     public function down()
     {
         $this->dropUsersTable();
-        $this->dropUserCustomFieldsTable();
+        $this->dropUserCustomFieldTable();
         $this->dropUserPersonalProfileTable();
         $this->dropUserPreviousRoleTable();
         $this->dropUserPreviousRoleResponsibilityTable();
@@ -64,7 +64,7 @@ class CreateTables extends Migration
     /**
      * Create user_custom_field Table
      */
-    public function createUserCustomFieldsTable()
+    public function createUserCustomFieldTable()
     {
         $sql = "CREATE TABLE `user_custom_field` (
             `user_id` INT(11) UNSIGNED NOT NULL,
@@ -219,7 +219,7 @@ class CreateTables extends Migration
     /**
      * Drop user_custom_field Table
      */
-    public function dropUserCustomFieldsTable()
+    public function dropUserCustomFieldTable()
     {
         $sql = "DROP TABLE `users_custom_field`;";
         $container = $this->getContainer();
@@ -231,7 +231,7 @@ class CreateTables extends Migration
      */
     public function dropUserPersonalProfileTable()
     {
-        $sql = "DROP TABLE `users_custom_fields`;";
+        $sql = "DROP TABLE `user_personal_profile`;";
         $container = $this->getContainer();
         $container['db']->query($sql);
     }
