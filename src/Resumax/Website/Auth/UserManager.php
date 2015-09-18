@@ -38,9 +38,6 @@ class UserManager implements UserProviderInterface
     /** @var string */
     protected $userClass = '\Resumax\Website\Auth\User';
 
-    /** @var bool */
-    protected $isUsernameRequired = false;
-
     /** @var Callable */
     protected $passwordStrengthValidator;
 
@@ -66,30 +63,21 @@ class UserManager implements UserProviderInterface
     // ----- UserProviderInterface -----
 
     /**
-     * Loads the user for the given username or email address.
+     * Loads the user for the given email address.
      *
      * Required by UserProviderInterface.
      *
-     * @param string $username The username
+     * @param string $email The email address
      *
      * @throws UsernameNotFoundException if the user is not found
      *
      * @return UserInterface
      */
-    public function loadUserByUsername($username)
+    public function loadUserByUsername($email)
     {
-        if (strpos($username, '@') !== false) {
-            $user = $this->findOneBy(array('email' => $username));
-            if (!$user) {
-                throw new UsernameNotFoundException(sprintf('Email "%s" does not exist.', $username));
-            }
-
-            return $user;
-        }
-
-        $user = $this->findOneBy(array('customFields' => array('username' => $username)));
+        $user = $this->findOneBy(array('email' => $email));
         if (!$user) {
-            throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
+            throw new UsernameNotFoundException(sprintf('Email "%s" does not exist.', $email));
         }
 
         return $user;
@@ -594,7 +582,7 @@ class UserManager implements UserProviderInterface
      * Validate a user object.
      *
      * Invokes User::validate(),
-     * and additionally tests that the User's email address and username (if set) are unique across all users.'.
+     * and additionally tests that the User's email address are unique across all users.'.
      *
      * @param User $user
      *
@@ -613,22 +601,6 @@ class UserManager implements UserProviderInterface
                 }
                 $errors['email'] = 'An account with that email address already exists.';
             }
-        }
-
-        // Ensure username is unique.
-        $duplicates = $this->findBy(array('customFields' => array('username' => $user->getRealUsername())));
-        if (!empty($duplicates)) {
-            foreach ($duplicates as $dup) {
-                if ($user->getId() && $dup->getId() == $user->getId()) {
-                    continue;
-                }
-                $errors['username'] = 'An account with that username already exists.';
-            }
-        }
-
-        // If username is required, ensure it is set.
-        if ($this->isUsernameRequired && !$user->getRealUsername()) {
-            $errors['username'] = 'Username is required.';
         }
 
         return $errors;
@@ -667,16 +639,6 @@ class UserManager implements UserProviderInterface
     public function getUserClass()
     {
         return $this->userClass;
-    }
-
-    public function setUsernameRequired($isRequired)
-    {
-        $this->isUsernameRequired = (bool) $isRequired;
-    }
-
-    public function getUsernameRequired()
-    {
-        return $this->isUsernameRequired;
     }
 
     public function setUserTableName($userTableName)

@@ -41,8 +41,7 @@ class AuthController
     // Custom fields to support in the editAction().
     protected $editCustomFields = array();
 
-    protected $isUsernameRequired = false;
-    protected $isEmailConfirmationRequired = true;
+    protected $isEmailConfirmationRequired = false;
     protected $isPasswordResetEnabled = true;
 
     /**
@@ -135,8 +134,6 @@ class AuthController
             'error' => isset($error) ? $error : null,
             'name' => $request->request->get('name'),
             'email' => $request->request->get('email'),
-            'username' => $request->request->get('username'),
-            'isUsernameRequired' => $this->isUsernameRequired,
         ));
     }
 
@@ -366,10 +363,6 @@ class AuthController
             $request->request->get('password'),
             $request->request->get('name') ?: null);
 
-        if ($username = $request->request->get('username')) {
-            $user->setUsername($username);
-        }
-
         $errors = $this->userManager->validate($user);
         if (!empty($errors)) {
             throw new InvalidArgumentException(implode("\n", $errors));
@@ -429,9 +422,6 @@ class AuthController
         if ($request->isMethod('POST')) {
             $user->setName($request->request->get('name'));
             $user->setEmail($request->request->get('email'));
-            if ($request->request->has('username')) {
-                $user->setUsername($request->request->get('username'));
-            }
             if ($request->request->get('password')) {
                 if ($request->request->get('password') != $request->request->get('confirm_password')) {
                     $errors['password'] = 'Passwords don\'t match.';
@@ -467,7 +457,6 @@ class AuthController
             'available_roles' => array('ROLE_USER', 'ROLE_ADMIN'),
             'image_url' => $this->getGravatarUrl($user->getEmail()),
             'customFields' => $customFields,
-            'isUsernameRequired' => $this->isUsernameRequired,
         ));
     }
 
@@ -495,14 +484,6 @@ class AuthController
     public function isPasswordResetEnabled()
     {
         return $this->isPasswordResetEnabled;
-    }
-
-    /**
-     * @param bool $isUsernameRequired
-     */
-    public function setUsernameRequired($isUsernameRequired)
-    {
-        $this->isUsernameRequired = (bool) $isUsernameRequired;
     }
 
     public function setEmailConfirmationRequired($isRequired)

@@ -59,7 +59,7 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
             ),
 
             'emailConfirmation' => array(
-                'required' => false, // Whether to require email confirmation before enabling new accounts.
+                'required' => true, // Whether to require email confirmation before enabling new accounts.
                 'template' => '@user/email/confirm-email.twig',
             ),
 
@@ -70,10 +70,6 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
 
             // Set this to use a custom User class.
             'userClass' => 'Resumax\Website\Auth\User',
-
-            // Whether to require that users have a username (default: false).
-            // By default, users sign in with their email address instead.
-            'isUsernameRequired' => false,
 
             // A list of custom fields to support in the edit controller.
             'editCustomFields' => array(),
@@ -116,7 +112,6 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
 
             $userManager = new UserManager($app['db'], $app);
             $userManager->setUserClass($app['user.options']['userClass']);
-            $userManager->setUsernameRequired($app['user.options']['isUsernameRequired']);
             $userManager->setUserTableName($app['user.options']['userTableName']);
             $userManager->setUserCustomFieldsTableName($app['user.options']['userCustomFieldsTableName']);
 
@@ -133,7 +128,6 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
             $app['user.options.init']();
 
             $controller = new AuthController($app['user.manager']);
-            $controller->setUsernameRequired($app['user.options']['isUsernameRequired']);
             $controller->setEmailConfirmationRequired($app['user.options']['emailConfirmation']['required']);
             $controller->setTemplates($app['user.options']['templates']);
             $controller->setEditCustomFields($app['user.options']['editCustomFields']);

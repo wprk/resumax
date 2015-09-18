@@ -177,54 +177,13 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Returns the username, if not empty, otherwise the email address.
-     *
-     * Email is returned as a fallback because username is optional,
-     * but the Symfony Security system depends on getUsername() returning a value.
-     * Use getRealUsername() to get the actual username value.
-     *
      * This method is required by the UserInterface.
      *
-     * @see getRealUsername
-     *
-     * @return string The username, if not empty, otherwise the email.
+     * @return string The user's email address.
      */
     public function getUsername()
     {
-        return $this->getCustomField('username') ?: $this->email;
-    }
-
-    /**
-     * Get the actual username value that was set,
-     * or null if no username has been set.
-     * Compare to getUsername, which returns the email if username is not set.
-     *
-     * @see getUsername
-     *
-     * @return string|null
-     */
-    public function getRealUsername()
-    {
-        return $this->getCustomField('username');
-    }
-
-    /**
-     * Test whether username has ever been set (even if it's currently empty).
-     *
-     * @return bool
-     */
-    public function hasRealUsername()
-    {
-        return $this->hasCustomField('username');
-    }
-
-    /**
-     * @param string $username
-     */
-    public function setUsername($username)
-    {
-        // Stored as a custom field for backward compatibility.
-        $this->setCustomField('username', $username);
+        return $this->email;
     }
 
     /**
@@ -350,13 +309,6 @@ class User implements AdvancedUserInterface, \Serializable
 
         if (strlen($this->getName()) > 100) {
             $errors['name'] = 'Name can\'t be longer than 100 characters.';
-        }
-
-        // Username can't contain "@",
-        // because that's how we distinguish between email and username when signing in.
-        // (It's possible to sign in by providing either one.)
-        if ($this->getRealUsername() && strpos($this->getRealUsername(), '@') !== false) {
-            $errors['username'] = 'Username cannot contain the "@" symbol.';
         }
 
         return $errors;
