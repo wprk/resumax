@@ -13,6 +13,8 @@ namespace Resumax\Website\Controllers;
 
 use Silex\Application;
 use Silex\ControllerProviderInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Dynamic page controller.
@@ -27,12 +29,19 @@ class ControllerProvider implements ControllerProviderInterface
      */
     public function connect(Application $app)
     {
+        $ifLoggedIn = function (Request $request, Application $app) {
+            if ($app['user']) {
+                return new RedirectResponse($app['url_generator']->generate('cv'));
+            }
+        };
+
         $controllers = $app['controllers_factory'];
 
         $controllers
             ->get('/', array($this, 'homeAction'))
             ->bind('home')
-            ->value('page', 'home');
+            ->value('page', 'home')
+            ->before($ifLoggedIn);
 
         $controllers
             ->get('/cv', array($this, 'cvAction'))
