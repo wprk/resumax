@@ -73,7 +73,7 @@
 		</nav>
 	{%- endblock -%}
 
-	<div id="content" class="container">
+	<div class="container">
 		{% if app.session.flashbag.has('alert') %}
 			{% for flashMessage in app.session.flashbag.get('alert') %}
 				<div class="alert alert-info">{{ flashMessage }}</div>
