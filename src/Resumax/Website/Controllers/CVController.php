@@ -14,7 +14,7 @@ namespace Resumax\Website\Controllers;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ProfileController
+class CVController
 {
     /** @var \Twig_Environment Templating engine */
     private $templating;
@@ -32,7 +32,7 @@ class ProfileController
 
     public function indexAction(Request $request)
     {
-        return new Response($this->templating->render('profile/index.twig', array(
+        return new Response($this->templating->render('cv/index.twig', array(
 
         )));
     }

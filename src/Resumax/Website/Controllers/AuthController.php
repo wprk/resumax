@@ -42,7 +42,7 @@ class AuthController
     protected $editCustomFields = array();
 
     protected $isUsernameRequired = false;
-    protected $isEmailConfirmationRequired = false;
+    protected $isEmailConfirmationRequired = true;
     protected $isPasswordResetEnabled = true;
 
     /**

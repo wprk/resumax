@@ -35,9 +35,9 @@ class ControllerProvider implements ControllerProviderInterface
             ->value('page', 'home');
 
         $controllers
-            ->get('/profile', array($this, 'profileAction'))
-            ->bind('profile')
-            ->value('page', 'profile');
+            ->get('/cv', array($this, 'cvAction'))
+            ->bind('cv')
+            ->value('page', 'cv');
 
         return $controllers;
     }
@@ -51,11 +51,11 @@ class ControllerProvider implements ControllerProviderInterface
         ));
     }
 
-    public function profileAction(Application $app, $page)
+    public function cvAction(Application $app, $page)
     {
         $page = basename($page);
 
-        return $app['twig']->render('profile/' . sprintf('%s.twig', $page), array(
+        return $app['twig']->render('cv/' . sprintf('%s.twig', $page), array(
             'page' => $page,
         ));
     }
