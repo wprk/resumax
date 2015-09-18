@@ -386,18 +386,6 @@ class AuthController
     }
 
     /**
-     * @param string $email
-     * @param int $size
-     *
-     * @return string
-     */
-    protected function getGravatarUrl($email, $size = 80)
-    {
-        // See https://en.gravatar.com/site/implement/images/ for available options.
-        return '//www.gravatar.com/avatar/' . md5(strtolower(trim($email))) . '?s=' . $size . '&d=identicon';
-    }
-
-    /**
      * Edit user action.
      *
      * @param Application $app
@@ -455,7 +443,6 @@ class AuthController
             'error' => implode("\n", $errors),
             'user' => $user,
             'available_roles' => array('ROLE_USER', 'ROLE_ADMIN'),
-            'image_url' => $this->getGravatarUrl($user->getEmail()),
             'customFields' => $customFields,
         ));
     }
