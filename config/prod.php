@@ -47,7 +47,6 @@ $app['user.options'] = array(
         'layout' => 'layout.twig',
         'view' => 'view.twig',
     ),
-    'mailer' => array('enabled' => false),
-    'editCustomFields' => array('twitterUsername' => 'Twitter username'),
+    'mailer' => array('enabled' => true),
     'userClass' => '\Resumax\User',
 );

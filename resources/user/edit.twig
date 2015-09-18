@@ -1,10 +1,10 @@
 {% extends layout_template  %}
 
-{% block title %}Edit User: {{ user.displayName }}{% endblock %}
+{% block title %}Account settings{% endblock %}
 
 {% block content %}
 
-    <h1>Edit User: {{ user.displayName }}</h1>
+    <h1>My account settings</h1>
 
     {% if error %}
         <div class="alert alert-danger">{{ error|nl2br }}</div>

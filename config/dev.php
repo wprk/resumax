@@ -21,3 +21,7 @@ $app['db.options'] = array(
     'user' => 'root',
     'password' => 'pelican123',
 );
+
+$app['user.options'] = array(
+    'mailer' => array('enabled' => true)
+);
