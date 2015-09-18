@@ -38,9 +38,6 @@ class AuthController
         'edit' => '@user/edit.twig',
     );
 
-    // Custom fields to support in the editAction().
-    protected $editCustomFields = array();
-
     protected $isEmailConfirmationRequired = false;
     protected $isPasswordResetEnabled = true;
 
@@ -405,8 +402,6 @@ class AuthController
             throw new NotFoundHttpException('No user was found with that ID.');
         }
 
-        $customFields = $this->editCustomFields ?: array();
-
         if ($request->isMethod('POST')) {
             $user->setName($request->request->get('name'));
             $user->setEmail($request->request->get('email'));
@@ -423,12 +418,6 @@ class AuthController
                 $user->setRoles($request->request->get('roles'));
             }
 
-            foreach (array_keys($customFields) as $customField) {
-                if ($request->request->has($customField)) {
-                    $user->setCustomField($customField, $request->request->get($customField));
-                }
-            }
-
             $errors += $this->userManager->validate($user);
 
             if (empty($errors)) {
@@ -443,18 +432,7 @@ class AuthController
             'error' => implode("\n", $errors),
             'user' => $user,
             'available_roles' => array('ROLE_USER', 'ROLE_ADMIN'),
-            'customFields' => $customFields,
         ));
-    }
-
-    /**
-     * Specify custom fields to support in the editAction().
-     *
-     * @param array $editCustomFields
-     */
-    public function setEditCustomFields(array $editCustomFields)
-    {
-        $this->editCustomFields = $editCustomFields;
     }
 
     /**

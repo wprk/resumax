@@ -130,7 +130,6 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
             $controller = new AuthController($app['user.manager']);
             $controller->setEmailConfirmationRequired($app['user.options']['emailConfirmation']['required']);
             $controller->setTemplates($app['user.options']['templates']);
-            $controller->setEditCustomFields($app['user.options']['editCustomFields']);
 
             return $controller;
         });
